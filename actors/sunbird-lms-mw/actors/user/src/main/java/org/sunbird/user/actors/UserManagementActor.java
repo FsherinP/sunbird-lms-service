@@ -253,6 +253,13 @@ public class UserManagementActor extends BaseActor {
     String managedById = (String) userDbRecord.get(JsonKey.MANAGED_BY);
     if (actorMessage.getOperation().equalsIgnoreCase(ActorOperations.UPDATE_USER_V2.getValue())) {
       setProfileUsertypeAndLocation(userMap, actorMessage);
+    } else {
+      if (userMap.containsKey(JsonKey.PROFILE_LOCATION)) {
+        userMap.remove(JsonKey.PROFILE_LOCATION);
+      }
+      if (userMap.containsKey(JsonKey.PROFILE_USERTYPE)) {
+        userMap.remove(JsonKey.PROFILE_USERTYPE);
+      }
     }
     validateUserTypeAndSubType(
         actorMessage.getRequest(), userDbRecord, actorMessage.getRequestContext());
@@ -1699,11 +1706,11 @@ public class UserManagementActor extends BaseActor {
       userMap.remove(JsonKey.LOCATION_CODES);
       if (userMap.containsKey(JsonKey.PROFILE_LOCATION)) {
         List<Map<String, String>> profLocList =
-                (List<Map<String, String>>) userMap.get(JsonKey.PROFILE_LOCATION);
+            (List<Map<String, String>>) userMap.get(JsonKey.PROFILE_LOCATION);
         List<String> locationCodes = null;
         if (CollectionUtils.isNotEmpty(profLocList)) {
           locationCodes =
-                  profLocList.stream().map(m -> m.get(JsonKey.CODE)).collect(Collectors.toList());
+              profLocList.stream().map(m -> m.get(JsonKey.CODE)).collect(Collectors.toList());
           userMap.put(JsonKey.LOCATION_CODES, locationCodes);
         }
         userMap.remove(JsonKey.PROFILE_LOCATION);
